@@ -1,0 +1,30 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "fullname": "Khitish Mangal",
+      "phone": 7377279183,
+      "email": "khitishmangal@npglobals.com",
+      "dob": "1999-02-15",
+      "designation": "Software Developer Trainee",
+      "gender": "Male",
+      "password": "111111",
+      "confirmpassword": "111111"
+    },
+    {
+      "id": 2,
+      "fullname": "Ritesh Choudhury",
+      "phone": 9876543210,
+      "email": "rc@gmail.com",
+      "dob": "1999-10-21",
+      "designation": "Software Developer Trainee",
+      "gender": "Male",
+      "password": "1234",
+      "confirmpassword": "1234"
+    }
+  ],
+  "comments": [],
+  "profile": {
+    "name": "typicode"
+  }
+}
