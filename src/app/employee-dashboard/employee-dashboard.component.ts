@@ -16,14 +16,27 @@ export class EmployeeDashboardComponent implements OnInit {
 
   employeeData: any;
 
+  submitted=false;
+
   btnUpdate:boolean = false;
 
   btnSubmit:boolean = true;
 
+  onSubmit(){
+    this.submitted=true;
+    if(this.employeeForm.invalid){
+      return
+    }
+    alert("Success");
+  }
 
   constructor(private formBuilder:FormBuilder, private api:ApiService ) {
+    
+   }
+
+  ngOnInit(): void {
     this.employeeForm = this.formBuilder.group({
-      fullname:['',[Validators.required,Validators.minLength(3)]],
+      fullname:['',[Validators.required,Validators.minLength(4)]],
       phone:['',Validators.required],
       email:['',Validators.required],
       dob:['',Validators.required],
@@ -32,9 +45,6 @@ export class EmployeeDashboardComponent implements OnInit {
       password:['',Validators.required],
       confirmpassword:['',Validators.required]
     })
-   }
-
-  ngOnInit(): void {
     
     this.AllEmployee();
   }
