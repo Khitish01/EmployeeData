@@ -16,11 +16,22 @@
       "fullname": "Ritesh Choudhury",
       "phone": 9876543210,
       "email": "rc@gmail.com",
-      "dob": "1999-10-21",
+      "dob": "1998-10-21",
       "designation": "Software Developer Trainee",
       "gender": "Male",
       "password": "1234",
       "confirmpassword": "1234"
+    },
+    {
+      "fullname": "Rakesh Swain",
+      "phone": 9861336654,
+      "email": "rakesh@gmail.com",
+      "dob": "2001-11-03",
+      "designation": "Software Developer Trainee",
+      "gender": "Male",
+      "password": "rk@123",
+      "confirmpassword": "rk@123",
+      "id": 3
     }
   ],
   "comments": [],

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder , FormGroup, Validators} from '@angular/forms';
+import { AbstractControl, FormBuilder , FormGroup, Validators} from '@angular/forms';
+import { Router } from '@angular/router';
 import { ApiService } from '../service/api.service';
 import { EmployeeModel } from './employee.model';
 
@@ -16,100 +17,98 @@ export class EmployeeDashboardComponent implements OnInit {
 
   employeeData: any;
 
-  submitted=false;
+  submitted:boolean=false;
 
   btnUpdate:boolean = false;
 
   btnSubmit:boolean = true;
 
-  onSubmit(){
-    this.submitted=true;
-    if(this.employeeForm.invalid){
-      return
-    }
-    alert("Success");
-  }
+  
 
-  constructor(private formBuilder:FormBuilder, private api:ApiService ) {
+  constructor(private formBuilder:FormBuilder, private api:ApiService) {
     
    }
 
   ngOnInit(): void {
     this.employeeForm = this.formBuilder.group({
       fullname:['',[Validators.required,Validators.minLength(4)]],
-      phone:['',Validators.required],
-      email:['',Validators.required],
-      dob:['',Validators.required],
+      phone:['',[Validators.required,Validators.pattern('^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')]],
+      email:['',[Validators.required,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')]],
+      dob:['',[Validators.required]],
       designation:['',Validators.required],
       gender:['',Validators.required],
       password:['',Validators.required],
       confirmpassword:['',Validators.required]
     })
     
-    this.AllEmployee();
+    this.showEmployee();
   }
 
+  
   AddEmployee(){
-    this.employeeobj.fullname = this.employeeForm.value.fullname;
-    this.employeeobj.phone = this.employeeForm.value.phone;
-    this.employeeobj.email = this.employeeForm.value.email;
-    this.employeeobj.dob = this.employeeForm.value.dob;
-    this.employeeobj.designation = this.employeeForm.value.designation;
-    this.employeeobj.gender = this.employeeForm.value.gender;
-    this.employeeobj.password = this.employeeForm.value.password;
-    this.employeeobj.confirmpassword = this.employeeForm.value.confirmpassword;
+    // this.submitted=false;
+    if(this.employeeForm.valid){    
+      this.api.postEmployee(this.employeeForm.value).subscribe({ next: (res) => {
+        console.log(res);
+      },
+      error: (err) => {
+        alert("Error!!");
+        // console.log(err);
+      },
+      complete: () => {
+        // console.log('complete');
+        alert("Data Successfully Saved");
+        this.showEmployee();
+        this.employeeForm.reset();
+      } })
+      }
+    else{
+        this.submitted=true;
+        if(this.employeeForm.invalid){
+          return;
+        }
+    }
+    
 
-    this.api.postEmployee(this.employeeobj).subscribe({ next: (res) => {
-      console.log(res);
-    },
-    error: (err) => {
-      alert("Error!!")
-      console.log(err)
-    },
-    complete: () => {
-      console.log('complete')
-      alert("Data Successfully Saved")
-      this.AllEmployee();
-      this.employeeForm.reset();
-    } })
+  }
 
+  ResetForm(){
+    this.employeeForm.reset();
+  }
+
+  getcontrol(name:any): AbstractControl |null{
+    return this.employeeForm.get(name)
   }
 
   get validate(){
-    return this.employeeForm.controls
+    return this.employeeForm.controls;
   }
 
-  AllEmployee(){
+  showEmployee(){
     this.api.getEmployee().subscribe(res => {
       this.employeeData = res;
     })
   }
 
   EditEmployee(data:any){
-    this.employeeForm.controls['fullname'].setValue(data.fullname);
-    this.employeeForm.controls['phone'].setValue(data.phone);
-    this.employeeForm.controls['email'].setValue(data.email);
-    this.employeeForm.controls['dob'].setValue(data.dob);
-    this.employeeForm.controls['designation'].setValue(data.designation);
-    this.employeeForm.controls['gender'].setValue(data.gender);
-    this.employeeForm.controls['password'].setValue(data.password);
-    this.employeeForm.controls['confirmpassword'].setValue(data.confirmpassword);
+    this.employeeForm.patchValue({
+      fullname: data.fullname,
+      phone:data.phone,
+      email:data.email,
+      dob:data.dob,
+      designation:data.designation,
+      gender:data.gender,
+      password:data.password,
+      confirmpassword:data.confirmpassword
+    })
     this.employeeobj.id = data.id;
     this.UpdateShowBtn();
   }
 
   UpdateEmployee(){
-    this.employeeobj.fullname = this.employeeForm.value.fullname;
-    this.employeeobj.phone = this.employeeForm.value.phone;
-    this.employeeobj.email = this.employeeForm.value.email;
-    this.employeeobj.dob = this.employeeForm.value.dob;
-    this.employeeobj.designation = this.employeeForm.value.designation;
-    this.employeeobj.gender = this.employeeForm.value.gender;
-    this.employeeobj.password = this.employeeForm.value.password;
-    this.employeeobj.confirmpassword = this.employeeForm.value.confirmpassword;
-    this.api.putEmployee(this.employeeobj,this.employeeobj.id).subscribe(res => {
+    this.api.putEmployee(this.employeeForm.value,this.employeeobj.id).subscribe(res => {
       alert("Data Successfully Updated");
-      this.AllEmployee();
+      this.showEmployee();
       this.SaveShowBtn();
     })
 
@@ -120,7 +119,7 @@ export class EmployeeDashboardComponent implements OnInit {
   DeleteEmployee(data:any){
     this.api.deleteEmployee(data.id).subscribe(res => {
       alert("Record Deleted");
-      this.AllEmployee();
+      this.showEmployee();
     })
 
   }

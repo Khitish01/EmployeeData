@@ -4,7 +4,7 @@
   </div>
 </nav>
 <div class="col-12 text-center mb-5">
-  <button type="submit" class="btn btn-primary fs-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Employee Data</button>
+  <button type="submit" class="btn btn-primary fs-4" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="ResetForm()">Add Employee Data</button>
 </div>
 
 <div class="container">
@@ -53,39 +53,43 @@
       <div class="modal-body">
         <form class="row g-3" [formGroup]="employeeForm">
           <div class="col-12">
-            <input type="text" class="form-control" placeholder="Enter Your Name" formControlName="fullname" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg"/>
-            <div *ngIf="validate['fullname'].touched && validate['fullname'].invalid" class="alert alert-danger">
-              <div *ngIf="validate['fullname'].errors?.['required']">Please provide fullname</div>
-               <div *ngIf="validate['fullname'].errors?.['minlength']">fullname must be 4 characters</div>
+            <input type="text" class="form-control" placeholder="Enter Your Name" formControlName="fullname" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" [ngClass]="{'is-invalid' :  submitted && getcontrol('fullname')?.touched && getcontrol('fullname')?.errors }"/>
+            <div *ngIf="submitted || validate['fullname'].touched && validate['fullname'].invalid" class="text-danger">
+              <div *ngIf="validate['fullname'].errors?.['required']"><span><i class="bi bi-exclamation-circle"></i></span>Please provide fullname</div>
+              <div *ngIf="validate['fullname'].errors?.['minlength']">fullname must be 4 characters</div>
               <!-- <div *ngIf="validate['fullname'].errors?.['noWhiteSpace']">Whitespace is not allowed</div>  -->
-             </div>
+             </div> 
           </div>
           <div class="col-12">
-            <input type="number" class="form-control" placeholder="Enter Your Phone Number" formControlName="phone" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg"/>
-            <div *ngIf="validate['phone'].touched && validate['phone'].invalid" class="alert alert-danger">
+            <input type="number" class="form-control" placeholder="Enter Your Phone Number" formControlName="phone" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" [ngClass]="{'is-invalid' :  submitted || getcontrol('phone')?.touched && getcontrol('phone')?.errors}"/>
+            <div *ngIf="submitted && validate['phone'].invalid" class="text-danger">
               <div *ngIf="validate['phone'].errors?.['required']">Please provide Phone Number</div>
-               <!-- <div *ngIf="validate['fullname'].errors?.['minlength']">fullname must be 4 characters</div> -->
+              <div *ngIf="validate['phone'].errors?.['pattern']">Please enter a valid Phone Number</div>
+              <!-- <div *ngIf="validate['phone'].errors?.['maxlength']">Please enter a valid Phone Number</div> -->
               <!-- <div *ngIf="validate['fullname'].errors?.['noWhiteSpace']">Whitespace is not allowed</div>  -->
              </div>
           </div>
           <div class="col-12">
-            <input type="email" class="form-control" placeholder="Enter Your Email" formControlName="email" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg"/>
-            <div *ngIf="validate['email'].touched && validate['email'].invalid" class="alert alert-danger">
+            <input type="email" class="form-control" placeholder="Enter Your Email" formControlName="email" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" [ngClass]="{'is-invalid' :  submitted || getcontrol('email')?.touched && getcontrol('email')?.errors}"/>
+            <div *ngIf="submitted && validate['email'].invalid && validate['email']" class="text-danger">
               <div *ngIf="validate['email'].errors?.['required']">Please provide Email Id</div>
+              <div *ngIf="validate['email'].errors?.['pattern']">Please provide an valid Email Id</div>
                <!-- <div *ngIf="validate['fullname'].errors?.['minlength']">fullname must be 4 characters</div> -->
               <!-- <div *ngIf="validate['fullname'].errors?.['noWhiteSpace']">Whitespace is not allowed</div>  -->
              </div>
           </div>
           <div class="col-12">
-            <input _ngcontent-maj-c50 type="date" id="datepicker" formcontrolname="birthday" formControlName="dob" class="form-control ng-pristine ng-valid ng-touched" ng-reflect-name="birthday"/>
-            <div *ngIf="validate['dob'].touched && validate['dob'].invalid" class="alert alert-danger">
+            <input _ngcontent-maj-c50 type="date" id="datepicker" formControlName="dob" class="form-control ng-pristine ng-valid ng-touched" ng-reflect-name="birthday" [ngClass]="{'is-invalid' :  submitted || getcontrol('dob')?.touched && getcontrol('dob')?.errors}"/>
+            <div *ngIf="submitted && validate['dob'].invalid" class="text-danger">
               <div *ngIf="validate['dob'].errors?.['required']">Please provide Date of Birth</div>
+              <!-- <div *ngIf="validate['dob'].errors?.['min']">Please provide a age between 18 to 60</div>
+              <div *ngIf="validate['dob'].errors?.['max']">Please provide a age between 18 to 60</div> -->
                <!-- <div *ngIf="validate['fullname'].errors?.['minlength']">fullname must be 4 characters</div> -->
               <!-- <div *ngIf="validate['fullname'].errors?.['noWhiteSpace']">Whitespace is not allowed</div>  -->
              </div>
           </div>
           <div class="col-12">
-            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" formControlName="designation">
+            <select class="form-select form-select-lg mb-3" aria-label=".form-select-sm example" formControlName="designation" [ngClass]="{'is-invalid' :  submitted && getcontrol('designation')?.errors}">
               <option selected value="none" disabled>Open this select menu</option>
               <option value="Software Developer Trainee">Software Developer Trainee</option>
               <option value="Software Developer">Software Developer</option>
@@ -93,13 +97,13 @@
               <option value="Team Lead">Team Lead</option>
               <option value="Project Manager">Project Manager</option>
             </select>
-            <div *ngIf="validate['designation'].touched && validate['designation'].invalid" class="alert alert-danger">
+            <div *ngIf="submitted && validate['designation'].invalid" class="text-danger">
               <div *ngIf="validate['designation'].errors?.['required']">Please provide Designation</div>
                <!-- <div *ngIf="validate['fullname'].errors?.['minlength']">fullname must be 4 characters</div> -->
               <!-- <div *ngIf="validate['fullname'].errors?.['noWhiteSpace']">Whitespace is not allowed</div>  -->
              </div>
           </div>
-          <div class="col-12">
+          <div class="col-12" [ngClass]="{'is-invalid' :  submitted && getcontrol('gender')?.errors}">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="gender" id="inlineRadio1" formControlName="gender" value="Male"/>
               <label class="form-check-label" for="inlineRadio1">Male</label>
@@ -112,30 +116,30 @@
               <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" formControlName="gender" value="Others"/>
               <label class="form-check-label" for="inlineRadio3">Others</label>
             </div>
-            <div *ngIf="validate['gender'].touched && validate['gender'].invalid" class="alert alert-danger">
+            <div *ngIf="submitted && validate['gender'].invalid" class="text-danger">
               <div *ngIf="validate['gender'].errors?.['required']">Please provide Gender</div>
                <!-- <div *ngIf="validate['fullname'].errors?.['minlength']">fullname must be 4 characters</div> -->
               <!-- <div *ngIf="validate['fullname'].errors?.['noWhiteSpace']">Whitespace is not allowed</div>  -->
              </div>
           </div>
           <div class="col-12">
-            <input type="password" class="form-control" placeholder="Enter Your Password" formControlName="password" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg"/>
-            <div *ngIf="validate['password'].touched && validate['password'].invalid" class="alert alert-danger">
+            <input type="password" class="form-control" placeholder="Enter Your Password" formControlName="password" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" [ngClass]="{'is-invalid' : submitted && getcontrol('password')?.errors}"/>
+            <div *ngIf="submitted && validate['password'].invalid" class="text-danger">
               <div *ngIf="validate['password'].errors?.['required']">Please provide Password</div>
                <!-- <div *ngIf="validate['fullname'].errors?.['minlength']">fullname must be 4 characters</div> -->
               <!-- <div *ngIf="validate['fullname'].errors?.['noWhiteSpace']">Whitespace is not allowed</div>  -->
              </div>
           </div>
           <div class="col-12">
-            <input type="password" class="form-control" placeholder="Re-enter Your Password" formControlName="confirmpassword" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg"/>
-            <div *ngIf="validate['confirmpassword'].touched && validate['confirmpassword'].invalid" class="alert alert-danger">
+            <input type="password" class="form-control" placeholder="Re-enter Your Password" formControlName="confirmpassword" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" [ngClass]="{'is-invalid' :  submitted && getcontrol('confirmpassword')?.errors}"/>
+            <div *ngIf="submitted && validate['confirmpassword'].invalid" class="text-danger">
               <div *ngIf="validate['confirmpassword'].errors?.['required']">Please provide Password again!</div>
                <!-- <div *ngIf="validate['fullname'].errors?.['minlength']">fullname must be 4 characters</div> -->
               <!-- <div *ngIf="validate['fullname'].errors?.['noWhiteSpace']">Whitespace is not allowed</div>  -->
              </div>
           </div>
           <div class="col-12">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" formControlName="check"/>
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" formControlName="check" [ngClass]="{'is-invalid' : getcontrol('check')?.errors && getcontrol('check')?.touched}"/>
             
             <label class="form-check-label" for="flexCheckDefault">
               Please check this checkbox
@@ -144,8 +148,8 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
-        <button *ngIf="btnSubmit" type="button" class="btn btn-primary" (click)="AddEmployee()">Submit</button>
+        
+        <button *ngIf="btnSubmit" type="submit" class="btn btn-primary" (click)="AddEmployee()">Submit</button>
         <button *ngIf="btnUpdate" type="button" class="btn btn-primary" (click)="UpdateEmployee()">Update</button>
       </div>
     </div>
